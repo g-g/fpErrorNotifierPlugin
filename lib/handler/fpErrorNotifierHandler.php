@@ -51,7 +51,7 @@ class fpErrorNotifierHandler
   public function initialize()
   {
     if ($this->isInit) return; 
-    $configs = sfConfig::get('sf_notify_driver');
+    $configs = sfConfig::get('app_fp_error_notifier_driver');
     
     $this->memoryReserv = str_repeat('x', 1024 * 500);
     
@@ -62,10 +62,10 @@ class fpErrorNotifierHandler
     
     set_exception_handler(array($this, 'handleException'));
         
-    $dispather = $this->notifier()->dispather();
-    $dispather->connect('application.throw_exception', array($this, 'handleEvent'));
-    $dispather->connect('notify.throw_exception', array($this, 'handleEvent'));
-    $dispather->connect('notify.send_message', array($this, 'handleEventMessage'));
+    $dispatcher = $this->notifier()->dispatcher();
+    $dispatcher->connect('application.throw_exception', array($this, 'handleEvent'));
+    $dispatcher->connect('notify.throw_exception', array($this, 'handleEvent'));
+    $dispatcher->connect('notify.send_message', array($this, 'handleEventMessage'));
     
     
     $this->isInit = true;

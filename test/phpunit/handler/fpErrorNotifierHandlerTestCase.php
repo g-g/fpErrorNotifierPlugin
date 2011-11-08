@@ -28,7 +28,7 @@ class fpErrorNotifierHandlerTestCase extends sfBasePhpunitTestCase
       'decoratedMessage' => $stubMessage,
       'helper' => $stubHelper,
       'driver' => $mockDriver,
-      'dispather' => new sfEventDispatcher()), array(), '', false);
+      'dispatcher' => new sfEventDispatcher()), array(), '', false);
     
     fpErrorNotifier::setInstance($notifier);
   }
@@ -71,10 +71,10 @@ class fpErrorNotifierHandlerTestCase extends sfBasePhpunitTestCase
       ->with($this->equalTo($notifier->decoratedMessage('foo')));
     
     $handler = new fpErrorNotifierHandler(new sfEventDispatcher, array());
-    $notifier->dispather()
+    $notifier->dispatcher()
       ->connect('application.throw_exception', array($handler, 'handleEvent'));
   
-    $notifier->dispather()->notifyUntil(
+    $notifier->dispatcher()->notifyUntil(
       new sfEvent(new Exception('an exception'), 'application.throw_exception'));
   }
   
@@ -87,10 +87,10 @@ class fpErrorNotifierHandlerTestCase extends sfBasePhpunitTestCase
       ->with($this->equalTo($notifier->decoratedMessage('foo')));
     
     $handler = new fpErrorNotifierHandler(new sfEventDispatcher, array());
-    $notifier->dispather()
+    $notifier->dispatcher()
       ->connect('controller.page_not_found', array($handler, 'handleEvent'));
   
-    $notifier->dispather()->notifyUntil(
+    $notifier->dispatcher()->notifyUntil(
       new sfEvent(new Exception('an exception'), 'controller.page_not_found'));
   }
 }

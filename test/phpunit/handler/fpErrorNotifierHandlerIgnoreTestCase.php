@@ -38,7 +38,7 @@ class fpErrorNotifierHandlerIgnoreTestCase extends sfBasePhpunitTestCase
       'decoratedMessage' => $stubMessage,
       'helper' => $stubHelper,
       'driver' => $mockDriver,
-      'dispather' => new sfEventDispatcher(),
+      'dispatcher' => new sfEventDispatcher(),
       'context' => $stubContext), array(), '', false);
     
     fpErrorNotifier::setInstance($notifier);

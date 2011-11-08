@@ -36,7 +36,7 @@ class fpErrorNotifierHandlerIgnore extends fpErrorNotifierHandler
   
   public function handleError($errno, $errstr, $errfile, $errline)
   {
-    // Set becvause of @ error-control operator.
+    // Set because of @ error-control operator.
     if ($this->options['ignore_@'] && 0 == error_reporting()) return;
     
     return parent::handleError($errno, $errstr, $errfile, $errline);

@@ -3,6 +3,9 @@
 
 ## Overview
 
+This is a fork of (makasim / fpErrorNotifierPlugin )[https://github.com/makasim/fpErrorNotifierPlugin]. The only change is
+that it uses app.yml iinstead of notify.yml for configuration because then the configuration is cached.
+
 The plugin for those people how want to feel confident in your code. 
 If something goes wrong you are the first to be notified about it.
 The email not only contains an error message but a bunch of useful information.
@@ -14,6 +17,9 @@ It easy to customize because the plugin was made as a set of components: _messag
 
 * [Symfony](http://www.symfony-project.org) 1.1 - 1.4
 
+## Attention
+If this plugin does not work in a dev environment, that is because the WebDebugLogger installs it's own error handler later, and thus overwrites our handler.
+
 ## Installation
 
 ### Download:
@@ -23,7 +29,7 @@ It easy to customize because the plugin was made as a set of components: _messag
 
 #### Git dev: 
 
-    git clone git://github.com/makasim/fpErrorNotifierPlugin.git
+    git clone git://github.com/g-g/fpErrorNotifierPlugin.git
 
 #### Git tag:
 
@@ -45,57 +51,59 @@ It easy to customize because the plugin was made as a set of components: _messag
 
 ## Getting Started
 
-The general way of useing the plugin is to send emails about each error has happend on the server (including exceptions, notice, fatal and so on).
-Let's look at this example to khow how to do it with this plugin.
+The general way of using the plugin is to send emails about each error that happend on the server (including exceptions, notice, fatal and so on).
+Let's look at this example to know how to do it with this plugin.
 
 
 First we need to install the plugin. It was described earlier and it is a common symfony plugin installation
-Second we have to create _notify.yml_ in any of the project config dir (I will store it in _SF_ROOT_DIR/config/notify.yml_) with a next content:
+Second we have to edit _app.yml_ in any of the project config dir (I will store it in _SF_ROOT_DIR/config/app.yml_) with a next content:
 
-_notify.yml_
+_app.yml_
 
     all:
-      driver:
-        class:                  fpErrorNotifierDriverMailNative
-        options:
-          to:                   'manager@example.com,teamleader@example.com,developer@example.com'
-          from:                 'noreply@live.example.com'
+      fp_error_notifier:
+        driver:
+          class:                  fpErrorNotifierDriverMailNative
+          options:
+            to:                   'manager@example.com,teamleader@example.com,developer@example.com'
+            from:                 'noreply@live.example.com'
 
 That's it. Now we have all errors and exceptions caught and sent to the development team members.
 
 ## Features
 
-### The notify.yml config
+### The app.yml config
 
 After you setup the plugin it starts to work. By default it logs the last error into a file in the log dir.
-To change this behavior you need to create _notify.yml_ in project or app config folder.
+To change this behavior you need to create/edit _app.yml_ in project or app config folder.
 
-So let's say I copy _notify.yml_ from plugin's config directory to _SF_ROOT_DIR/config/notify.yml_
+So let's say I copy _app.yml_ from plugin's config directory to _SF_ROOT_DIR/config/app.yml_
 
-_notify.yml_
+_app.yml_
 
     prod:
+      fp_error_notifier:
 
-    all:
-      handler:
-        class:                   fpErrorNotifierHandler
-        options:                 {}
+      all:
+        handler:
+          class:                   fpErrorNotifierHandler
+          options:                 {}
             
-      message:
-        class:                   fpErrorNotifierMessage
-        options:                 {}
+        message:
+          class:                   fpErrorNotifierMessage
+          options:                 {}
         
-      helper: 
-        class:                   fpErrorNotifierMessageHelper
-        options:                 {}
+        helper: 
+          class:                   fpErrorNotifierMessageHelper
+          options:                 {}
         
-      decorator:
-        class:                   fpErrorNotifierDecoratorHtml
-        options:                 {}
+        decorator:
+          class:                   fpErrorNotifierDecoratorHtml
+          options:                 {}
       
-      driver: 
-        class:                   fpErrorNotifierDriverNull
-        options:                 {}
+        driver: 
+          class:                   fpErrorNotifierDriverNull
+          options:                 {}
 
 As you can see we have some stuff like handler, message, helper, decorator and driver:
 
@@ -112,29 +120,31 @@ There are two handlers which comes with the plugin:
 * _fpErrorNotifierHandler_ - base implementation
 * _fpErrorNotifierHandlerIgnore_ - extended version with some ignoring abilities.
 
-_fpErrorNotifierHandler_ does not take any options and can be configerd like this:
+_fpErrorNotifierHandler_ does not take any options and can be configured like this:
 
-_notify.yml_
+_app.yml_
 
     all:
-      handler:
-        class:                   fpErrorNotifierHandler
-        options:                 {}
+      fp_error_notifier:
+        handler:
+          class:                   fpErrorNotifierHandler
+          options:                 {}
 
 _fpErrorNotifierHandlerIgnore_:
 
-_notify.yml_
+_app.yml_
 
     all:
-     handler:
-       class:                   fpErrorNotifierHandlerIgnore
-         options:
-          ignore_@:                false
-          ignore_errors:           [<?php echo E_ERROR ?>, <?php echo E_NOTICE ?>]
-          ignore_exceptions:       [FooException]
-          log_ignored:             true
-          ignore_duplication:      true
-          ignore_duplication_time: 10 # seconds
+      fp_error_notifier:
+        handler:
+          class:                   fpErrorNotifierHandlerIgnore
+            options:
+            ignore_@:                false
+            ignore_errors:           [<?php echo E_ERROR ?>, <?php echo E_NOTICE ?>]
+            ignore_exceptions:       [FooException]
+            log_ignored:             true
+            ignore_duplication:      true
+            ignore_duplication_time: 10 # seconds
 
 You can avoid sending duplicated errors for some period of time. Ignore some php errors or exception.
 Also it is possible to get notifications that happend under the '@' command.
@@ -145,25 +155,27 @@ There are four drivers comes with the plugin:
 
 * _fpErrorNotifierDriverMailNative_ - use php's mail function to send an email.
 
-_notify.yml_
+_app.yml_
 
     all:
-      driver:
-        class:                  fpErrorNotifierDriverMailNative
-        options:
-          to:                   'manager@example.com,teamleader@example.com,developer@example.com'
-          from:                 'noreply@live.example.com'
+      fp_error_notifier:
+        driver:
+          class:                  fpErrorNotifierDriverMailNative
+          options:
+            to:                   'manager@example.com,teamleader@example.com,developer@example.com'
+            from:                 'noreply@live.example.com'
 
 * _fpErrorNotifierDriverMailSymfony_ - use a mailer (It should be Swift) configured via _factories.yml_. It is taken from sfContext.
 
-_notify.yml_
+_app.yml_
 
     all:
-      driver:
-        class:                  fpErrorNotifierDriverMailSymfony
-        options:
-          to:                   'manager@example.com,teamleader@example.com,developer@example.com'
-          from:                 'noreply@live.example.com'
+      fp_error_notifier:
+        driver:
+          class:                  fpErrorNotifierDriverMailSymfony
+          options:
+            to:                   'manager@example.com,teamleader@example.com,developer@example.com'
+            from:                 'noreply@live.example.com'
           
 It is an example of SWIFT mailer configuration with _gmail.com_ account 
 
@@ -186,7 +198,7 @@ _factories.yml_
 
 * _fpErrorNotifierDriverFile_ - store the last error to the file (It can be helpfull for testing services in development process).
 
-_notify.yml_
+_app.yml_
 
     driver:
       class:             sfErrorNotifierDriverFile
@@ -201,21 +213,22 @@ You can render the message as simple text or html (set by default).
 
 * _fpErrorNotifierDecoratorHtml_
 
-_notify.yml_
+_app.yml_
 
     all:
-      decorator:
-        class:                   fpErrorNotifierDecoratorHtml
-        options:                 {}
+      fp_error_notifier:
+        decorator:
+          class:                   fpErrorNotifierDecoratorHtml
+          options:                 {}
         
 * _fpErrorNotifierDecoratorText_
 
-_notify.yml_
+_app.yml_
 
     all:
-      decorator:
-        class:                   fpErrorNotifierDecoratorText
-        options:                 {}
+       decorator:
+          class:                   fpErrorNotifierDecoratorText
+          options:                 {}
 
 ## Customizing 
 
@@ -275,4 +288,9 @@ So to run test you need this plugin first. Then you can run this command to exec
 
 ## Feedback
 
-I am very welcome for any comments suggestions, bug fixes, implementations and so on. You can create a ticket at my [github repository](http://github.com/makasim/fpErrorNotifierPlugin/issues) or make a fork and do your changes.
+This is a fork of (makasim / fpErrorNotifierPlugin )[https://github.com/makasim/fpErrorNotifierPlugin]. The only change is
+that it uses app.yml instead of notify.yml for configuration because then the configuration is cached. I do not intend to improve the plugin, because
+it works very well. Please report only bugs with app.yml here, all other issues please send to the original maintainer, see below:
+
+[quote from="makasim"]I am very welcome for any comments suggestions, bug fixes, implementations and so on. You can create a 
+ticket at my [github repository](http://github.com/makasim/fpErrorNotifierPlugin/issues) or make a fork and do your changes.[/quote]

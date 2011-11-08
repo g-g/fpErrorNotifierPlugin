@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) . '/include.php';
-
 /** 
  *
  * @package    fpErrorNotifier
@@ -17,8 +15,7 @@ class fpErrorNotifierPluginConfiguration extends sfPluginConfiguration
    */
   public function initialize()
   {
-    $this->_initializeConfig();
-
+    if (!sfConfig::get('app_fp_error_notifier_driver')) return;  
     $this->notifier()->handler()->initialize();
   }
   
@@ -37,17 +34,4 @@ class fpErrorNotifierPluginConfiguration extends sfPluginConfiguration
     return $instance;
   }
   
-  /**
-   * 
-   * @return void
-   */
-  protected function _initializeConfig()
-  {
-    $configFiles = $this->configuration->getConfigPaths('config/notify.yml');
-    $config = sfDefineEnvironmentConfigHandler::getConfiguration($configFiles);
-    
-    foreach ($config as $name => $value) {
-      sfConfig::set("sf_notify_{$name}", $value);  
-    }
-  }
 }

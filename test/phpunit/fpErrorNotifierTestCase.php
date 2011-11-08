@@ -15,8 +15,6 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
   {
     $this->notifierBackup = fpErrorNotifier::getInstance();
     
-    $notifier = new fpErrorNotifier(new sfEventDispatcher());
-    fpErrorNotifier::setInstance($notifier);
   }
   
   protected function _end()
@@ -24,13 +22,13 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
     fpErrorNotifier::setInstance($this->notifierBackup);
   }
   
-  public function testDispather()
+  public function testDispatcher()
   {
-    $dispather = new sfEventDispatcher();
+    $dispatcher = new sfEventDispatcher();
     
-    $notifier = new fpErrorNotifier($dispather);
+    $notifier = new fpErrorNotifier($dispatcher);
     
-    $this->assertSame($dispather, $notifier->dispather());
+    $this->assertSame($dispatcher, $notifier->dispatcher());
   }
  
   public function testDriver()
@@ -39,7 +37,7 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
     $mock = $this->getMockForAbstractClass(
       'fpBaseErrorNotifierDriver', array($expectedOptions));
 
-    sfConfig::set('sf_notify_driver', array(
+    sfConfig::set('app_fp_error_notifier_driver', array(
       'class' => get_class($mock),
       'options' => $expectedOptions));
     
@@ -54,7 +52,7 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
   public function testHelper()
   {
     $mock = $this->getMock('fpErrorNotifierMessageHelper');
-    sfConfig::set('sf_notify_helper', array('class' => get_class($mock)));
+    sfConfig::set('app_fp_error_notifier_helper', array('class' => get_class($mock)));
     
     $notifier = new fpErrorNotifier(new sfEventDispatcher());
     
@@ -70,7 +68,7 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
   public function testMessage()
   {
     $mock = $this->getMockForAbstractClass('fpBaseErrorNotifierMessage');
-    sfConfig::set('sf_notify_message', array('class' => get_class($mock)));
+    sfConfig::set('app_fp_error_notifier_message', array('class' => get_class($mock)));
     
     $notifier = new fpErrorNotifier(new sfEventDispatcher());
     
@@ -82,7 +80,7 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
 //      'summarySection' => array('foo' => 'bar'), 
 //      'formatSubject' => 'Foo Subject'));
 //
-//    sfConfig::set('sf_notify_helper', array('class' => get_class($mock)));
+//    sfConfig::set('app_fp_error_notifier_helper', array('class' => get_class($mock)));
   }
   
   public function testHandler()
@@ -94,7 +92,7 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
     $mock = $this->getMockForAbstractClass(
       'fpErrorNotifierHandler', array(new sfEventDispatcher, $expectedOptions));
 
-    sfConfig::set('sf_notify_handler', array(
+    sfConfig::set('app_fp_error_notifier_handler', array(
       'class' => get_class($mock),
       'options' => $expectedOptions));
     
@@ -112,7 +110,7 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
     
     $mock = $this->getMockForAbstractClass(
       'fpBaseErrorNotifierDecorator', array(), '', false);
-    sfConfig::set('sf_notify_decorator', array('class' => get_class($mock)));
+    sfConfig::set('app_fp_error_notifier_decorator', array('class' => get_class($mock)));
     
     $notifier = new fpErrorNotifier(new sfEventDispatcher());
     $decorator = $notifier->decorator($stubMessage);
@@ -130,10 +128,10 @@ class fpErrorNotifierTestCase extends sfBasePhpunitTestCase
   {
     $decoratorMock = $this->getMockForAbstractClass(
       'fpBaseErrorNotifierDecorator', array(), '', false);
-    sfConfig::set('sf_notify_decorator', array('class' => get_class($decoratorMock)));
+    sfConfig::set('app_fp_error_notifier_decorator', array('class' => get_class($decoratorMock)));
     
     $messageMock = $this->getMockForAbstractClass('fpBaseErrorNotifierMessage');
-    sfConfig::set('sf_notify_message', array('class' => get_class($messageMock)));
+    sfConfig::set('app_fp_error_notifier_message', array('class' => get_class($messageMock)));
     
     $notifier = new fpErrorNotifier(new sfEventDispatcher());
     
