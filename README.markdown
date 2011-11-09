@@ -106,7 +106,7 @@ _app.yml_
 
 As you can see we have some stuff like handler, message, helper, decorator and driver:
 
-* Handler - it is a most valuable things. Because it cautches all errors and handles them.
+* Handler - it is the most valuable thing. Because it catches all errors and handles them.
 * Message - is just a data container.
 * Helper  - helps to fill the _message_ with an information (like fill message from Exception instance).
 * Decorator - it wrapps the message and know hot the message can be rendered.
