@@ -4,7 +4,7 @@ all:
   fp_error_notifier:
     handler:
       class:                      fpErrorNotifierHandlerIgnore
-      options:                    {ignore_@: false}
+      options:                    {ignore_@: false, ignore404: true}
 
     message:
       class:                      fpErrorNotifierMessage

@@ -13,7 +13,7 @@ class fpErrorNotifierHandler
    * 
    * @var array
    */
-  protected $options = array();
+  protected $options = array('notify404' => false);
   
   /**
    * 
@@ -51,8 +51,7 @@ class fpErrorNotifierHandler
   public function initialize()
   {
     if ($this->isInit) return; 
-    $configs = sfConfig::get('app_fp_error_notifier_driver');
-    
+
     $this->memoryReserv = str_repeat('x', 1024 * 500);
     
     // Register error handler it will process the most part of erros (but not all)
@@ -66,9 +65,24 @@ class fpErrorNotifierHandler
     $dispatcher->connect('application.throw_exception', array($this, 'handleEvent'));
     $dispatcher->connect('notify.throw_exception', array($this, 'handleEvent'));
     $dispatcher->connect('notify.send_message', array($this, 'handleEventMessage'));
+    if ($this->options['notify404']) {
+        $dispatcher->connect('controller.page_not_found', array($this, 'handle404'));
+    }
     
     
     $this->isInit = true;
+  }
+  
+  public function handle404(sfEvent $event)
+  {
+    $subject = $event->getSubject();
+    if ($subject instanceof Exception){
+      return $this->handleException($subject);
+    } else {
+      return $this->handleException(
+          new sfError404Exception('404 - Page not found: "' . $this->notifier()->context()->getRequest()->getUri() . '"')
+      );
+    }
   }
   
   /**

@@ -83,31 +83,30 @@ _app.yml_
 
     prod:
       fp_error_notifier:
-
-      all:
-        handler:
-          class:                   fpErrorNotifierHandler
-          options:                 {}
+        all:
+          handler:
+            class:                      fpErrorNotifierHandlerIgnore
+            options:                    {ignore_@: false, ignore404: true}
             
-        message:
-          class:                   fpErrorNotifierMessage
-          options:                 {}
+          message:
+            class:                   fpErrorNotifierMessage
+            options:                 {}
         
-        helper: 
-          class:                   fpErrorNotifierMessageHelper
-          options:                 {}
+          helper: 
+            class:                   fpErrorNotifierMessageHelper
+            options:                 {}
         
-        decorator:
-          class:                   fpErrorNotifierDecoratorHtml
-          options:                 {}
+          decorator:
+            class:                   fpErrorNotifierDecoratorHtml
+            options:                 {}
       
-        driver: 
-          class:                   fpErrorNotifierDriverNull
-          options:                 {}
+          driver: 
+            class:                   fpErrorNotifierDriverNull
+            options:                 {}
 
 As you can see we have some stuff like handler, message, helper, decorator and driver:
 
-* Handler - it is a most valuable things. Because it cauth any errors and handle it
+* Handler - it is a most valuable things. Because it cautches all errors and handles them.
 * Message - is just a data container.
 * Helper  - helps to fill the _message_ with an information (like fill message from Exception instance).
 * Decorator - it wrapps the message and know hot the message can be rendered.
@@ -120,7 +119,7 @@ There are two handlers which comes with the plugin:
 * _fpErrorNotifierHandler_ - base implementation
 * _fpErrorNotifierHandlerIgnore_ - extended version with some ignoring abilities.
 
-_fpErrorNotifierHandler_ does not take any options and can be configured like this:
+_fpErrorNotifierHandler_ can take one option and can be configured like this:
 
 _app.yml_
 
@@ -128,7 +127,8 @@ _app.yml_
       fp_error_notifier:
         handler:
           class:                   fpErrorNotifierHandler
-          options:                 {}
+    # Set the notify404 option to true to get notified for missing pages.
+          options:                 {notify404: false}
 
 _fpErrorNotifierHandlerIgnore_:
 
@@ -145,6 +145,7 @@ _app.yml_
             log_ignored:             true
             ignore_duplication:      true
             ignore_duplication_time: 10 # seconds
+            ignore404:               true
 
 You can avoid sending duplicated errors for some period of time. Ignore some php errors or exception.
 Also it is possible to get notifications that happend under the '@' command.

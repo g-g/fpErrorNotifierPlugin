@@ -19,7 +19,9 @@ class fpErrorNotifierHandlerIgnore extends fpErrorNotifierHandler
     'ignore_exceptions' => array(),
     'ignore_duplication' => false,
     'ignore_duplication_time' => 3600,
-    'log_ignored' => true);
+    'ignore404' => true,
+    'log_ignored' => true,
+    'notify404' => false);
   
   
   /**
@@ -30,6 +32,9 @@ class fpErrorNotifierHandlerIgnore extends fpErrorNotifierHandler
   { 
     // Prevent blocking of error reporting, becuse of @ - error-control operator.
     if ($this->options['ignore_@'] && 0 == error_reporting()) @error_reporting(-2);
+    if (!$this->options['ignore404']) {
+      $this->options['notify404'] = true;
+    }
     
     return parent::initialize();
   }
